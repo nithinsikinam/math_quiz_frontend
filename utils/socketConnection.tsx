@@ -1,3 +1,4 @@
+"use client"
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import io, { Socket } from 'socket.io-client';
 
@@ -24,7 +25,7 @@ export const SocketProvider: React.FC<SocketConnectionProps> = ({ children }) =>
 
   useEffect(() => {
     
-    const newSocket = io('http://localhost:4000');
+    const newSocket = io(process.env.BACKEND_URL || "");
 
     setSocket(newSocket);
 
