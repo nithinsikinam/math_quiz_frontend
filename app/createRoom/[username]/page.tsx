@@ -2,9 +2,10 @@
 
 import { useSocketConnection } from '@/utils/socketConnection'
 import React,{ useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
  const createRoom = ({ params }: { params: { username: string } }) => {
-
+  const router = useRouter()
   const { socket } = useSocketConnection()
 
   useEffect(()=>{
@@ -19,8 +20,13 @@ import React,{ useEffect } from 'react'
 
         const { roomId } = result;
 
-        socket?.emit("join-room",roomId)
+        socket?.emit("join-room",roomId,params.username)
         
+        socket?.on("game-starts",()=>{
+          router.push('/play')
+        }
+        
+        )
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
