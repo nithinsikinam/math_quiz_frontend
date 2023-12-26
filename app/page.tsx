@@ -1,37 +1,61 @@
-import Link from 'next/link'
+"use client"
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSocketConnection } from '@/utils/socketConnection';
+import toast, { Toaster } from 'react-hot-toast';
+import InputField from '@/components/InputField';
+import RoomActionButton from '@/components/RoomActionButton';
+
 
 export default function Home() {
+  const router = useRouter();
+  const { socket } = useSocketConnection();
+  const [username, setUsername] = useState<string>('');
+  const [roomId, setRoomId] = useState<string>('');
+
+  const showToast = (message: string) => {
+    toast(message, { icon: '⚠️' });
+  };
+
+  const handleCreateRoomSubmit = () => {
+    if (!username) {
+      showToast('Enter a Username');
+      return;
+    }
+    router.push(`/createRoom/${username}`);
+  };
+
+  const handleRoomIdSubmit = () => {
+    if (!username) {
+      showToast('Enter a Username');
+      return;
+    }
+    if (!roomId) {
+      showToast('Enter a RoomId');
+      return;
+    }
+    if (socket) {
+      socket.emit('join-room', roomId, username);
+    } else {
+      toast.error('Error! Try again');
+    }
+  };
+
   return (
-
-
-  <main className="flex-grow flex flex-col justify-center items-center px-4 py-8">
-    <div className="bg-white rounded-2xl shadow-xl p-10 max-w-lg w-full">
-      <h2 className="text-3xl font-extrabold text-gray-800 mb-8 text-center">Enter the Realm of Numbers</h2>
-      
-      <div className="space-y-6">
-
-        <div className="flex flex-col space-y-4">
-          <input type="text" placeholder="Enter Room ID" className="p-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
-          <input type="text" placeholder="Enter Your Name" className="p-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all" />
-          <button className="px-6 py-3 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 transition duration-200 ease-in-out">Join Room</button>
+    <main className="flex-grow flex flex-col justify-center items-center px-4 py-8">
+      <Toaster />
+      <div className="bg-white rounded-2xl shadow-xl p-10 max-w-lg w-full">
+        <h2 className="text-3xl font-extrabold text-gray-800 mb-8 text-center">Enter the Realm of Numbers</h2>
+        <div className="space-y-6">
+          <div className="flex flex-col space-y-4">
+            <InputField value={roomId} onChange={(e) => setRoomId(e.target.value)} placeholder="Enter Room ID" borderColor="indigo" />
+            <InputField value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Your Name" borderColor="red" />
+            <RoomActionButton onClick={handleRoomIdSubmit} text="Join Room" color="indigo" />
+          </div>
+          <RoomActionButton onClick={handleCreateRoomSubmit} text="Create New Room" color="green" />
         </div>
-
-
-        <Link href="/createRoom">
-              <button className="block w-full mt-2">
-                <div className="py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition duration-200 ease-in-out text-center">
-                  Create New Room
-                </div>
-              </button>
-            </Link>
       </div>
-    </div>
-  </main>
-
-
-
-
-
-
-  )
+    </main>
+  );
 }

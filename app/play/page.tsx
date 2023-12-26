@@ -2,46 +2,44 @@
 import React, { useState, useEffect } from 'react';
 
 export default function GameplayScreen() {
+  
     const [timer, setTimer] = useState(30);
- // State for storing the user's input
  const [input, setInput] = useState('');
 
- // Function to handle keypad button clicks
+ 
  const handleKeypadClick = (key:any) => {
    switch (key) {
      case 'C':
-       setInput(''); // Clear the input
+       setInput(''); 
        break;
-     case '←': // Backspace functionality
-       setInput(input.slice(0, -1)); // Remove the last character
+     case '←': 
+       setInput(input.slice(0, -1)); 
        break;
      case 'Submit':
-       // Handle the submission logic here
+       
        console.log('Submitted:', input);
-       setInput(''); // Clear the input after submission
+       setInput(''); 
        break;
      default:
-       setInput(input + key); // Append the key to the input
+       setInput(input + key); 
        break;
    }
  };
 
-   // Update the timer every second
+   
    useEffect(() => {
     const countdown = setInterval(() => {
       setTimer(prevTimer => (prevTimer > 0 ? prevTimer - 1 : 0));
     }, 1000);
 
-    // Clear interval on component unmount
+    
     return () => clearInterval(countdown);
   }, []);
 
-  // Handle timer expiration (e.g., move to next question or end game)
+  
   useEffect(() => {
     if (timer === 0) {
-      // Timer expired logic here
       console.log("Time's up!");
-      // Reset timer if needed or handle end-of-time situation
     }
   }, [timer]);
 
