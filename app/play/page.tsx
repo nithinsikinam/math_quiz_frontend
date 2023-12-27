@@ -1,11 +1,14 @@
 "use client"
+
 import React, { useState, useEffect } from 'react';
+import { useSocketConnection } from '@/utils/socketConnection';
 
 export default function GameplayScreen() {
   
-    const [timer, setTimer] = useState(30);
- const [input, setInput] = useState('');
+ const { socket } = useSocketConnection();
 
+ const [timer, setTimer] = useState(30);
+ const [input, setInput] = useState('');
  
  const handleKeypadClick = (key:any) => {
    switch (key) {
@@ -26,13 +29,16 @@ export default function GameplayScreen() {
    }
  };
 
+   useEffect(() => {
+    if(socket){
+      socket?.emit('start-game',)
+    }
+   },[socket]);
    
    useEffect(() => {
     const countdown = setInterval(() => {
       setTimer(prevTimer => (prevTimer > 0 ? prevTimer - 1 : 0));
     }, 1000);
-
-    
     return () => clearInterval(countdown);
   }, []);
 

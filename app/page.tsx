@@ -14,13 +14,13 @@ export default function Home() {
   const [username, setUsername] = useState<string>('');
   const [roomId, setRoomId] = useState<string>('');
 
-  const showToast = (message: string) => {
+  const showWarningToast = (message: string) => {
     toast(message, { icon: '⚠️' });
   };
 
   const handleCreateRoomSubmit = () => {
     if (!username) {
-      showToast('Enter a Username');
+      showWarningToast('Enter a Username');
       return;
     }
     router.push(`/createRoom/${username}`);
@@ -28,11 +28,11 @@ export default function Home() {
 
   const handleRoomIdSubmit = () => {
     if (!username) {
-      showToast('Enter a Username');
+      showWarningToast('Enter a Username');
       return;
     }
     if (!roomId) {
-      showToast('Enter a RoomId');
+      showWarningToast('Enter a RoomId');
       return;
     }
     if (socket) {

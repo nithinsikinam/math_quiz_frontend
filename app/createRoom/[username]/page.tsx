@@ -22,7 +22,6 @@ const CreateRoom: React.FC<CreateRoomProps> = ({ params }) => {
         const { roomId } = await response.json();
         socket?.emit('join-room', roomId, params.username);
         socket?.on('start-game',()=>{
-          socket?.emit('start-game', roomId, params.username);
           router.push('/play')
         })
       } catch (error) {
